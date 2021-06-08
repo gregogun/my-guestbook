@@ -1,5 +1,5 @@
 import { Button, IconButton } from "@chakra-ui/button";
-import { useColorMode } from "@chakra-ui/color-mode";
+import { useColorMode, useColorModeValue } from "@chakra-ui/color-mode";
 import { Box, HStack, Text } from "@chakra-ui/layout";
 import { Heading } from "@chakra-ui/layout";
 import { Flex } from "@chakra-ui/layout";
@@ -14,11 +14,7 @@ type Props = {
 
 const Container: React.FC<Props> = ({ children }) => {
   return (
-    <Box
-      m="auto"
-      pt={{ base: "1rem", md: "2rem", xl: "4rem" }}
-      w={{ base: "90vw", md: "80vw", xl: "1024px" }}
-    >
+    <Box m="auto" w={{ base: "90vw", md: "80vw", xl: "1024px" }}>
       <Header />
       {children}
     </Box>
@@ -28,12 +24,18 @@ const Container: React.FC<Props> = ({ children }) => {
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [session, loading] = useSession();
+  const gray = useColorModeValue("gray.300", "gray.600");
   return (
-    <Flex justify="space-between" align="center">
-      <Heading as="h1" fontSize={{ base: "2rem", xl: "3rem" }}>
+    <Flex
+      py={{ base: "1rem", md: "2rem" }}
+      borderBottom="1px solid"
+      borderColor={gray}
+      justify="space-between"
+      align="center"
+    >
+      <Heading as="h1" fontSize={{ base: "1rem", md: "2rem", xl: "3rem" }}>
         Greg's Guestbook
       </Heading>
-      {session && <Text>{session.user.name}</Text>}
       <HStack>
         {session ? (
           <Button

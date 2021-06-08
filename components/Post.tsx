@@ -24,10 +24,11 @@ const Post: React.FC<{ post: PostProps }> = ({ post }) => {
       listStyleType="none"
       as="li"
       p="1rem"
+      mb="1rem"
       border="1px solid"
       borderColor="gray.300"
     >
-      <Text fontWeight="bold">{post.title}</Text>
+      <Text fontSize="1.25rem">{post.content}</Text>
       <Text color={gray}>By {authorName}</Text>
     </Box>
   );
