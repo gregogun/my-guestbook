@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GetStaticProps } from "next";
 import Container from "../components/Container";
 import Post, { PostProps } from "../components/Post";
@@ -14,7 +14,9 @@ export const getStaticProps: GetStaticProps = async () => {
   const feed = await prisma.post.findMany({
     include: {
       author: {
-        select: { name: true },
+        select: {
+          name: true,
+        },
       },
     },
   });
@@ -23,10 +25,11 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const SubmitPost = () => {
   const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState<any>("");
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setForm({ state: "loading" });
 
     try {
       const body = { content };
@@ -35,17 +38,26 @@ const SubmitPost = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      setLoading(false);
+      setForm({ state: "success" });
+      setContent("");
     } catch (error) {
-      setLoading(false);
+      setForm({ state: "error" });
+      setContent("");
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (content) {
+      setForm({ state: "" });
+    }
+  }, [content]);
 
   return (
     <Flex direction="column" mb="4rem" as="form" onSubmit={handleSubmit}>
       <FormControl id="message">
         <Textarea
+          isRequired
           onChange={(e) => setContent(e.target.value)}
           value={content}
           rows={2}
@@ -55,13 +67,19 @@ const SubmitPost = () => {
       </FormControl>
       <Button
         disabled={!content}
-        loading={loading}
+        isLoading={form.state === "loading"}
         loadingText="Submitting..."
         type="submit"
         maxW="20rem"
-        colorScheme="linkedin"
+        colorScheme={
+          form.state === "success"
+            ? "green"
+            : form.state === "error"
+            ? "red"
+            : "linkedin"
+        }
       >
-        Submit
+        {form.state === "success" ? "Submitted!" : "Submit"}
       </Button>
     </Flex>
   );
