@@ -24,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 const Post: React.FC<PostProps> = (props) => {
   return (
     <Container>
-      <Heading as="h2">{props.title}</Heading>
+      <Heading as="h2">{props.content}</Heading>
       <p>By {props?.author?.name || "Unknown author"}</p>
     </Container>
   );
